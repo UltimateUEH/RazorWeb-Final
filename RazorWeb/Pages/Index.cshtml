@@ -1,0 +1,22 @@
+﻿@page
+@using RazorWeb.Models
+@model IndexModel
+@{
+    ViewData["Title"] = "Trang chủ";
+
+    var posts = ViewData["Posts"] as List<Article>;
+}
+
+<div class="text-center">
+    <h1 class="display-4">Chào mừng bạn đã đến với trang web.</h1>
+</div>
+
+<ol>
+    @foreach (var post in posts)
+    {
+        <li>
+            <h2>@post.Title</h2>
+            <p>@post.Content</p>
+        </li>
+    }
+</ol>

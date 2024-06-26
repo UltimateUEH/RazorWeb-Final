@@ -1,0 +1,48 @@
+﻿@page "/admin/edit-user-claim/{userId?}"
+@model RazorWeb.Areas.Admin.Pages.User.EditUserRoleClaimModel
+@{
+    ViewData["Title"] = "Đặc tính của user";
+}
+
+<h1>@ViewData["Title"]: @Model.user.UserName</h1>
+<partial name="_StatusMessage" for="StatusMessage" />
+
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Input.ClaimType" class="control-label"></label>
+                <input asp-for="Input.ClaimType" class="form-control" />
+                <span asp-validation-for="Input.ClaimType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.ClaimValue" class="control-label"></label>
+                <input asp-for="Input.ClaimValue" class="form-control" />
+                <span asp-validation-for="Input.ClaimValue" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                @if (Model.userclaim != null)
+                {
+                    <input type="submit" value="Cập nhật" class="btn btn-primary mt-3" />
+                    <input type="submit" value="Xoá" class="btn btn-danger mt-3" asp-page-handler="Delete" asp-route-claimid="@Model.userclaim.Id"/>
+                }
+                else
+                {
+                    <input type="submit" value="Tạo mới" class="btn btn-primary mt-3" />                    
+                }
+                <br />
+                <a class="btn btn-secondary mt-2" asp-page="./AddRole" asp-route-id="@Model.user.Id">Chỉnh sửa User</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

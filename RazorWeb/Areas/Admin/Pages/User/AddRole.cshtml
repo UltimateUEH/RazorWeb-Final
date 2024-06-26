@@ -1,0 +1,79 @@
+﻿@page "/admin/assign-member-role/{id}"
+@model RazorWeb.Areas.Admin.Pages.User.AddRoleModel
+@{
+    ViewData["Title"] = "Gán vai trò";
+}
+
+<h3>Thiết lập vai trò cho thành viên: @Model.user.UserName</h3>
+<partial name="_StatusMessage" for="StatusMessage" />
+
+<br />
+<div class="row">
+    <div class="col-md-6">
+        <form id="set-password-form" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+            <div class="form-floating mb-3">
+                <div style="position: relative;">
+                @* <input asp-for="RoleNames" class="form-control" autocomplete="role" placeholder="Vui lòng nhập vai trò của bạn." /> *@
+                    <label asp-for="RoleNames" class="form-label" style="position: absolute; top: -30px; left: 0;"></label>
+                    @Html.ListBoxFor(m => m.RoleNames, @Model.allRoles, new
+                        {
+                            id = "id-select-roles",
+                            @class = "w-100"
+                        })
+                </div>
+                <span asp-validation-for="RoleNames" class="text-danger"></span>
+            </div>
+            <button type="submit" class="w-40 btn btn-primary">Cập nhật</button>
+            <a class="btn btn-secondary" asp-page="./Index">Danh sách thành viên</a>
+        </form>
+        <hr />
+        <p>Các đặc tính của user có được từ quyền:</p>
+        @if (Model.claimsInRole.Count > 0)
+        {
+            <ul>
+                @foreach (var claim in Model.claimsInRole)
+                {
+                    <li>@claim.ClaimType: @claim.ClaimValue</li>
+                }
+            </ul>
+        }
+        <br />
+        <a class="btn btn-info" asp-page="./EditUserRoleClaim" asp-page-handler="AddClaim" asp-route-userid="@Model.user.Id">Thêm đặc tính riêng</a>
+        <p class="mt-4">Các đặc tính riêng:</p>
+        @if (Model.claimsInUserClaim.Count > 0)
+        {
+            <ul>
+                @foreach (var claim in Model.claimsInUserClaim)
+                {
+                    <li>
+                        <a asp-page="./EditUserRoleClaim" asp-page-handler="EditClaim" asp-route-claimid="@claim.Id">@claim.ClaimType: @claim.ClaimValue</a>
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+</div>
+
+@section Scripts {
+
+    <script src="~/lib/multiple-select/multiple-select.min.js"></script>
+    <link rel="stylesheet" href="~/lib/multiple-select/multiple-select.min.css" />
+
+    <style>
+        .ms-choice .placeholder {
+            min-height: 0 !important;
+            display: none !important;
+        }
+    </style>
+
+    <script>
+        $("#id-select-roles").multipleSelect({
+            selectAll: false,
+            keepOpen: false,
+            isOpen: false,
+        });
+    </script>
+
+    <partial name="_ValidationScriptsPartial" />
+}
